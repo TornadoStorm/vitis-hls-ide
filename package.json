@@ -14,6 +14,16 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Vitis HLS IDE",
+      "properties": {
+        "vitis-hls-ide.hlsPath": {
+          "type": "string",
+          "default": "C:\\Xilinx\\Vitis_HLS\\2023.2",
+          "description": "Path to the Vitis HLS installation directory"
+        }
+      }
+    },
     "commands": [
       {
         "command": "vitis-hls-ide.helloWorld",
