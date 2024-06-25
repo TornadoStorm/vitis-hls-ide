@@ -1,4 +1,4 @@
-import { basename, dirname } from 'path';
+import path from 'path';
 import { EventEmitter } from 'stream';
 import * as vscode from 'vscode';
 import { OutputConsole } from './outputConsole';
@@ -50,14 +50,15 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
 
         if (files.length > 0) {
             for (let i = 0; i < files.length; i++) {
-                const dirPath = vscode.workspace.asRelativePath(dirname(files[i].fsPath));
-                const projectName = basename(dirPath);
+                const absoluteDirPath = path.dirname(files[i].fsPath);
+                const relativeDirPath = vscode.workspace.asRelativePath(absoluteDirPath);
+                const projectName = path.basename(relativeDirPath);
 
-                const solutionFiles = await vscode.workspace.findFiles(dirPath + '/*/*.aps', undefined, 10);
-                const solutions = solutionFiles.map(f => new SolutionInfo(basename(dirname(f.fsPath))));
+                const solutionFiles = await vscode.workspace.findFiles(relativeDirPath + '/*/*.aps', undefined, 10);
+                const solutions = solutionFiles.map(f => new SolutionInfo(path.basename(path.dirname(f.fsPath))));
 
-                this._projects.push(new ProjectInfo(projectName, dirPath, solutions));
-                OutputConsole.instance.appendLine('+ Added project: [' + projectName + '] at ' + dirPath);
+                this._projects.push(new ProjectInfo(projectName, absoluteDirPath, solutions));
+                OutputConsole.instance.appendLine('+ Added project: [' + projectName + '] at ' + relativeDirPath);
             }
         } else {
             OutputConsole.instance.appendLine('No HLS projects found');
@@ -81,10 +82,16 @@ export class ProjectInfo {
     public path: string;
     public readonly solutions: SolutionInfo[];
 
-    constructor(name: string, path: string, solutions: SolutionInfo[]) {
+    constructor(name: string, absolutePath: string, solutions: SolutionInfo[]) {
         this.name = name;
-        this.path = path;
+        this.path = absolutePath;
         this.solutions = solutions;
+
+        // this.terminal = vscode.window.createTerminal('Vitis HLS IDE - ' + name);
+        // this.terminal.sendText('cd ' + this.path);
+        // this.terminal.sendText('cmd /c "C:\\Xilinx\\Vitis_HLS\\2023.2\\bin\\vitis_hls -i"');
+        // this.terminal.sendText('open_project ' + name);
+        // this.terminal.show();
     }
 }
 

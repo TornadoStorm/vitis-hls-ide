@@ -35,34 +35,96 @@ class SolutionTreeItem extends TreeItem {
 
     public getChildren(): Thenable<TreeItem[]> {
         return Promise.resolve([
-            new CsimTreeItem(),
-            new CsynthTreeItem(),
-            new CosimTreeItem()
+            new CsimTreeItem(this._solution),
+            new CsynthTreeItem(this._solution),
+            new CosimTreeItem(this._solution)
         ]);
     }
 }
 
 class CsimTreeItem extends TreeItem {
-    constructor() {
+    private _solution: SolutionInfo;
+
+    constructor(solution: SolutionInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
+        super("C SIMULATION", collapsibleState);
+        this._solution = solution;
+    }
+
+    public getChildren(): Thenable<TreeItem[]> {
+        return Promise.resolve([
+            new RunCsimTreeItem(this._solution),
+            new DebugCsimTreeItem(this._solution)
+        ]);
+    }
+}
+
+class RunCsimTreeItem extends TreeItem {
+    private _solution: SolutionInfo;
+    constructor(solution: SolutionInfo) {
         super('Run C Simulation');
+        this._solution = solution;
         // this.iconPath = new vscode.ThemeIcon('loading~spin');
-        this.iconPath = new vscode.ThemeIcon('debug-start', new vscode.ThemeColor('debugIcon.startForeground'));
+        this.iconPath = new vscode.ThemeIcon('run', new vscode.ThemeColor('debugIcon.startForeground'));
+    }
+}
+
+class DebugCsimTreeItem extends TreeItem {
+    private _solution: SolutionInfo;
+    constructor(solution: SolutionInfo) {
+        super('Debug C Simulation');
+        this._solution = solution;
+        // this.iconPath = new vscode.ThemeIcon('loading~spin');
+        this.iconPath = new vscode.ThemeIcon('debug-alt', new vscode.ThemeColor('debugIcon.startForeground'));
     }
 }
 
 class CsynthTreeItem extends TreeItem {
-    constructor() {
+    private _solution: SolutionInfo;
+
+    constructor(solution: SolutionInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
+        super("C SYNTHESIS", collapsibleState);
+        this._solution = solution;
+    }
+
+    public getChildren(): Thenable<TreeItem[]> {
+        return Promise.resolve([
+            new RunCsynthTreeItem(this._solution),
+        ]);
+    }
+}
+
+class RunCsynthTreeItem extends TreeItem {
+    private _solution: SolutionInfo;
+    constructor(solution: SolutionInfo) {
         super('Run C Synthesis');
+        this._solution = solution;
         // this.iconPath = new vscode.ThemeIcon('loading~spin');
-        this.iconPath = new vscode.ThemeIcon('debug-start', new vscode.ThemeColor('debugIcon.startForeground'));
+        this.iconPath = new vscode.ThemeIcon('run', new vscode.ThemeColor('debugIcon.startForeground'));
     }
 }
 
 class CosimTreeItem extends TreeItem {
-    constructor() {
+    private _solution: SolutionInfo;
+
+    constructor(solution: SolutionInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
+        super("C/RTL COSIMULATION", collapsibleState);
+        this._solution = solution;
+    }
+
+    public getChildren(): Thenable<TreeItem[]> {
+        return Promise.resolve([
+            new RunCosimTreeItem(this._solution),
+        ]);
+    }
+}
+
+class RunCosimTreeItem extends TreeItem {
+    private _solution: SolutionInfo;
+    constructor(solution: SolutionInfo) {
         super('Run Cosimulation');
+        this._solution = solution;
         // this.iconPath = new vscode.ThemeIcon('loading~spin');
-        this.iconPath = new vscode.ThemeIcon('debug-start', new vscode.ThemeColor('debugIcon.startForeground'));
+        this.iconPath = new vscode.ThemeIcon('run', new vscode.ThemeColor('debugIcon.startForeground'));
     }
 }
 

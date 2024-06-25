@@ -15,6 +15,8 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(projectsViewProvider);
 	context.subscriptions.push(OutputConsole.instance);
 	context.subscriptions.push(ProjectManager.instance);
+
+	// TODO check include paths in c_cpp_properties.json
 }
 
 export function deactivate() {
