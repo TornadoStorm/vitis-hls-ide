@@ -65,6 +65,11 @@ class RunCsimTreeItem extends TreeItem {
         this._solution = solution;
         // this.iconPath = new vscode.ThemeIcon('loading~spin');
         this.iconPath = new vscode.ThemeIcon('run', new vscode.ThemeColor('debugIcon.startForeground'));
+        this.command = {
+            title: 'Run C Simulation',
+            command: 'vitis-hls-ide.projects.runCsim',
+            arguments: [this._solution]
+        };
     }
 }
 
@@ -75,6 +80,11 @@ class DebugCsimTreeItem extends TreeItem {
         this._solution = solution;
         // this.iconPath = new vscode.ThemeIcon('loading~spin');
         this.iconPath = new vscode.ThemeIcon('debug-alt', new vscode.ThemeColor('debugIcon.startForeground'));
+        this.command = {
+            title: 'Debug C Simulation',
+            command: 'vitis-hls-ide.projects.debugCsim',
+            arguments: [this._solution]
+        };
     }
 }
 
@@ -100,6 +110,11 @@ class RunCsynthTreeItem extends TreeItem {
         this._solution = solution;
         // this.iconPath = new vscode.ThemeIcon('loading~spin');
         this.iconPath = new vscode.ThemeIcon('run', new vscode.ThemeColor('debugIcon.startForeground'));
+        this.command = {
+            title: 'Run C Synthesis',
+            command: 'vitis-hls-ide.projects.runCsynth',
+            arguments: [this._solution]
+        };
     }
 }
 
@@ -125,6 +140,11 @@ class RunCosimTreeItem extends TreeItem {
         this._solution = solution;
         // this.iconPath = new vscode.ThemeIcon('loading~spin');
         this.iconPath = new vscode.ThemeIcon('run', new vscode.ThemeColor('debugIcon.startForeground'));
+        this.command = {
+            title: 'Run Cosimulation',
+            command: 'vitis-hls-ide.projects.runCosim',
+            arguments: [this._solution]
+        };
     }
 }
 

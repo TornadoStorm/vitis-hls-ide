@@ -17,6 +17,11 @@
     "configuration": {
       "title": "Vitis HLS IDE",
       "properties": {
+        "vitis-hls-ide.vitisPath": {
+          "type": "string",
+          "default": "C:\\Xilinx\\Vitis\\2023.2",
+          "description": "Path to the Vitis installation directory"
+        },
         "vitis-hls-ide.hlsPath": {
           "type": "string",
           "default": "C:\\Xilinx\\Vitis_HLS\\2023.2",
@@ -25,10 +30,6 @@
       }
     },
     "commands": [
-      {
-        "command": "vitis-hls-ide.helloWorld",
-        "title": "Hello World"
-      },
       {
         "command": "vitis-hls-ide.projects.refresh",
         "title": "Vitis HLS IDE: Refresh Projects",

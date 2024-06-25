@@ -52,14 +52,15 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
             for (let i = 0; i < files.length; i++) {
                 const absoluteDirPath = path.dirname(files[i].fsPath);
                 const relativeDirPath = vscode.workspace.asRelativePath(absoluteDirPath);
-                const projectName = path.basename(relativeDirPath);
 
+                const project = new ProjectInfo(absoluteDirPath);
                 const solutionFiles = await vscode.workspace.findFiles(relativeDirPath + '/*/*.aps', undefined, 10);
-                const solutions = solutionFiles.map(f => new SolutionInfo(path.basename(path.dirname(f.fsPath))));
+                const solutions = solutionFiles.map(f => new SolutionInfo(path.basename(path.dirname(f.fsPath)), project));
+                project.solutions.push(...solutions);
 
-                this._projects.push(new ProjectInfo(projectName, absoluteDirPath, solutions));
-                OutputConsole.instance.appendLine('+ Added project: [' + projectName + '] at ' + relativeDirPath);
+                this._projects.push(project);
             }
+            OutputConsole.instance.appendLine('Found ' + this._projects.length + ' HLS projects');
         } else {
             OutputConsole.instance.appendLine('No HLS projects found');
         }
@@ -78,12 +79,12 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
 }
 
 export class ProjectInfo {
-    public name: string;
-    public path: string;
-    public readonly solutions: SolutionInfo[];
+    public readonly name: string;
+    public readonly path: string;
+    public solutions: SolutionInfo[];
 
-    constructor(name: string, absolutePath: string, solutions: SolutionInfo[]) {
-        this.name = name;
+    constructor(absolutePath: string, solutions: SolutionInfo[] = []) {
+        this.name = path.basename(absolutePath);
         this.path = absolutePath;
         this.solutions = solutions;
 
@@ -96,9 +97,11 @@ export class ProjectInfo {
 }
 
 export class SolutionInfo {
-    public name: string;
+    public readonly project: ProjectInfo;
+    public readonly name: string;
 
-    constructor(name: string) {
+    constructor(name: string, project: ProjectInfo) {
         this.name = name;
+        this.project = project;
     }
 }
