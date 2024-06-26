@@ -17,7 +17,7 @@ export default async (solution: SolutionInfo) => {
         "program": path.join(solution.project.path, solution.name, "csim/build/csim.exe"),
         "args": [],
         "stopAtEntry": false,
-        "cwd": "${workspaceFolder}/src",
+        "cwd": "${workspaceFolder}",
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
@@ -26,11 +26,6 @@ export default async (solution: SolutionInfo) => {
             {
                 "description": "Enable pretty-printing for gdb",
                 "text": "-enable-pretty-printing",
-                "ignoreFailures": true
-            },
-            {
-                "description": "Set Disassembly Flavor to Intel",
-                "text": "-gdb-set disassembly-flavor intel",
                 "ignoreFailures": true
             }
         ]
