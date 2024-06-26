@@ -23,6 +23,9 @@
     "vivado",
     "amd"
   ],
+  "sponsor": {
+    "url": "https://github.com/sponsors/TornadoStorm"
+  },
   "author": {
     "name": "Julian Bernhard Dühnen",
     "email": "julianduehnen@gmail.com"
