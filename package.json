@@ -8,8 +8,33 @@
     "vscode": "^1.90.0"
   },
   "categories": [
+    "Debuggers",
+    "Testing",
     "Other"
   ],
+  "keywords": [
+    "xilinx",
+    "embedded",
+    "fpga",
+    "simulation",
+    "synthesis",
+    "cosimulation",
+    "rtl",
+    "vivado",
+    "amd"
+  ],
+  "author": {
+    "name": "Julian Bernhard Dühnen",
+    "email": "julianduehnen@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TornadoStorm/vitis-hls-ide.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TornadoStorm/vitis-hls-ide/issues"
+  },
   "activationEvents": [
     "workspaceContains:**/hls.app"
   ],
