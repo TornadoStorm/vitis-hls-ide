@@ -27,6 +27,7 @@
     "name": "Julian Bernhard Dühnen",
     "email": "julianduehnen@gmail.com"
   },
+  "publisher": "TornadoStorm",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
