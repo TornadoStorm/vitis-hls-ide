@@ -1,8 +1,6 @@
 import * as vscode from 'vscode';
 import ProjectManager, { ProjectInfo, SolutionInfo } from '../projectManager';
 
-// TODO: Working stop buttons
-
 const startIconPath = new vscode.ThemeIcon('debug-start', new vscode.ThemeColor('debugIcon.startForeground'));
 const debugIconPath = new vscode.ThemeIcon('debug', new vscode.ThemeColor('debugIcon.startForeground'));
 const stopIconPath = new vscode.ThemeIcon('debug-stop', new vscode.ThemeColor('debugIcon.stopForeground'));
