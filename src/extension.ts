@@ -4,6 +4,10 @@ import debugCsim from './commands/projects.debugCsim';
 import runCosim from './commands/projects.runCosim';
 import runCsim from './commands/projects.runCsim';
 import runCsynth from './commands/projects.runCsynth';
+import stopCosim from './commands/projects.stopCosim';
+import stopCsim from './commands/projects.stopCsim';
+import stopCsynth from './commands/projects.stopCsynth';
+import stopDebugCsim from './commands/projects.stopDebugCsim';
 import { OutputConsole } from './outputConsole';
 import ProjectManager from './projectManager';
 import ProjectsViewTreeProvider from './views/projects-tree';
@@ -22,6 +26,10 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('vitis-hls-ide.projects.runCosim', runCosim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.runCsim', runCsim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.runCsynth', runCsynth),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.stopDebugCsim', stopDebugCsim),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsim', stopCsim),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsynth', stopCsynth),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCosim', stopCosim),
 		projectsViewProvider,
 		OutputConsole.instance,
 		ProjectManager.instance,

@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import ProjectManager, { ProjectInfo, SolutionInfo } from '../projectManager';
 
+// TODO: Working stop buttons
+
 const startIconPath = new vscode.ThemeIcon('debug-start', new vscode.ThemeColor('debugIcon.startForeground'));
 const debugIconPath = new vscode.ThemeIcon('debug', new vscode.ThemeColor('debugIcon.startForeground'));
 const stopIconPath = new vscode.ThemeIcon('debug-stop', new vscode.ThemeColor('debugIcon.stopForeground'));
@@ -73,7 +75,12 @@ class RunCsimTreeItem extends TreeItem {
 
         if (vscode.tasks.taskExecutions.some(e => e.task.name === this._solution.csimTaskName)) {
             this.iconPath = stopIconPath;
-        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE")) {
+            this.command = {
+                title: `Stop ${title}`,
+                command: 'vitis-hls-ide.projects.stopCsim',
+                arguments: [this._solution]
+            };
+        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE") || vscode.debug.activeDebugSession) {
             this.iconPath = loadingIconPath;
         } else {
             this.iconPath = startIconPath;
@@ -94,13 +101,23 @@ class DebugCsimTreeItem extends TreeItem {
         super(title);
         this._solution = solution;
 
-        // TODO: Figure this out
-        this.iconPath = debugIconPath;
-        this.command = {
-            title: title,
-            command: 'vitis-hls-ide.projects.debugCsim',
-            arguments: [this._solution]
-        };
+        if (vscode.debug.activeDebugSession?.name === this._solution.debugCsimTaskName) {
+            this.iconPath = stopIconPath;
+            this.command = {
+                title: `Stop ${title}`,
+                command: 'vitis-hls-ide.projects.stopDebugCsim',
+                arguments: [this._solution]
+            };
+        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE") || vscode.debug.activeDebugSession) {
+            this.iconPath = loadingIconPath;
+        } else {
+            this.iconPath = debugIconPath;
+            this.command = {
+                title: title,
+                command: 'vitis-hls-ide.projects.debugCsim',
+                arguments: [this._solution]
+            };
+        }
     }
 }
 
@@ -129,7 +146,12 @@ class RunCsynthTreeItem extends TreeItem {
 
         if (vscode.tasks.taskExecutions.some(e => e.task.name === this._solution.csynthTaskName)) {
             this.iconPath = stopIconPath;
-        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE")) {
+            this.command = {
+                title: `Stop ${title}`,
+                command: 'vitis-hls-ide.projects.stopCsynth',
+                arguments: [this._solution]
+            };
+        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE") || vscode.debug.activeDebugSession) {
             this.iconPath = loadingIconPath;
         } else {
             this.iconPath = startIconPath;
@@ -168,7 +190,12 @@ class RunCosimTreeItem extends TreeItem {
 
         if (vscode.tasks.taskExecutions.some(e => e.task.name === this._solution.cosimTaskName)) {
             this.iconPath = stopIconPath;
-        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE")) {
+            this.command = {
+                title: `Stop ${title}`,
+                command: 'vitis-hls-ide.projects.stopCosim',
+                arguments: [this._solution]
+            };
+        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE") || vscode.debug.activeDebugSession) {
             this.iconPath = loadingIconPath;
         } else {
             this.iconPath = startIconPath;
@@ -193,6 +220,7 @@ export default class ProjectsViewTreeProvider implements vscode.TreeDataProvider
         this.disposables = [
             vscode.tasks.onDidStartTask(() => this._onDidChangeTreeData.fire()),
             vscode.tasks.onDidEndTask(() => this._onDidChangeTreeData.fire()),
+            vscode.debug.onDidChangeActiveDebugSession(() => this._onDidChangeTreeData.fire()),
         ];
     }
 

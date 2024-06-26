@@ -11,7 +11,7 @@ export default async (solution: SolutionInfo) => {
     }
 
     const debugConfig: vscode.DebugConfiguration = {
-        "name": "Run C Simulation",
+        "name": solution.debugCsimTaskName,
         "type": "cppdbg",
         "request": "launch",
         "program": path.join(solution.project.path, solution.name, "csim/build/csim.exe"),

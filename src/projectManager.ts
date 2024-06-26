@@ -100,15 +100,17 @@ export class SolutionInfo {
     public readonly project: ProjectInfo;
     public readonly name: string;
 
-    public readonly csimTaskName;
-    public readonly csynthTaskName;
-    public readonly cosimTaskName;
+    public readonly debugCsimTaskName: string;
+    public readonly csimTaskName: string;
+    public readonly csynthTaskName: string;
+    public readonly cosimTaskName: string;
 
     constructor(name: string, project: ProjectInfo) {
         this.name = name;
         this.project = project;
 
         const id = path.join(this.project.path, this.name);
+        this.debugCsimTaskName = `Debug C simulation for ${id}`;
         this.csimTaskName = `C simulation for ${id}`;
         this.csynthTaskName = `C synthesis for ${id}`;
         this.cosimTaskName = `Cosimulation for ${id}`;
