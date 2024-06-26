@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
 		ProjectManager.instance,
 	);
 
-	// TODO check include paths in c_cpp_properties.json
+	// TODO check include paths in c_cpp_properties.json and ask if should add path
 }
 
 export function deactivate() {

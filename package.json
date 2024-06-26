@@ -1,8 +1,9 @@
 {
   "name": "vitis-hls-ide",
-  "displayName": "Vitis HLS IDE",
+  "displayName": "Vitis HLS IDE (Unstable)",
   "description": "Work on your Vitis HLS project from within VS Code",
   "version": "0.0.1",
+  "icon": "resources/logo.png",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -41,7 +42,7 @@
         {
           "id": "vitisHlsIdeMainContainer",
           "title": "Vitis HLS IDE",
-          "icon": "resources/icon.png"
+          "icon": "resources/logo.svg"
         }
       ]
     },
