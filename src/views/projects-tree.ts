@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 import ProjectManager, { ProjectInfo, SolutionInfo } from '../projectManager';
 
+const startIconPath = new vscode.ThemeIcon('debug-start', new vscode.ThemeColor('debugIcon.startForeground'));
+const debugIconPath = new vscode.ThemeIcon('debug', new vscode.ThemeColor('debugIcon.startForeground'));
+const stopIconPath = new vscode.ThemeIcon('debug-stop', new vscode.ThemeColor('debugIcon.stopForeground'));
+const loadingIconPath = new vscode.ThemeIcon('loading~spin');
+
 abstract class TreeItem extends vscode.TreeItem {
     constructor(label: string, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None) {
         super(label, collapsibleState);
@@ -61,27 +66,38 @@ class CsimTreeItem extends TreeItem {
 class RunCsimTreeItem extends TreeItem {
     private _solution: SolutionInfo;
     constructor(solution: SolutionInfo) {
-        super('Run C Simulation');
+        const title = 'Run C Simulation';
+
+        super(title);
         this._solution = solution;
-        // this.iconPath = new vscode.ThemeIcon('loading~spin');
-        this.iconPath = new vscode.ThemeIcon('run', new vscode.ThemeColor('debugIcon.startForeground'));
-        this.command = {
-            title: 'Run C Simulation',
-            command: 'vitis-hls-ide.projects.runCsim',
-            arguments: [this._solution]
-        };
+
+        if (vscode.tasks.taskExecutions.some(e => e.task.name === this._solution.csimTaskName)) {
+            this.iconPath = stopIconPath;
+        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE")) {
+            this.iconPath = loadingIconPath;
+        } else {
+            this.iconPath = startIconPath;
+            this.command = {
+                title: title,
+                command: 'vitis-hls-ide.projects.runCsim',
+                arguments: [this._solution]
+            };
+        }
     }
 }
 
 class DebugCsimTreeItem extends TreeItem {
     private _solution: SolutionInfo;
     constructor(solution: SolutionInfo) {
-        super('Debug C Simulation');
+        const title = 'Debug C Simulation';
+
+        super(title);
         this._solution = solution;
-        // this.iconPath = new vscode.ThemeIcon('loading~spin');
-        this.iconPath = new vscode.ThemeIcon('debug-alt', new vscode.ThemeColor('debugIcon.startForeground'));
+
+        // TODO: Figure this out
+        this.iconPath = debugIconPath;
         this.command = {
-            title: 'Debug C Simulation',
+            title: title,
             command: 'vitis-hls-ide.projects.debugCsim',
             arguments: [this._solution]
         };
@@ -106,15 +122,23 @@ class CsynthTreeItem extends TreeItem {
 class RunCsynthTreeItem extends TreeItem {
     private _solution: SolutionInfo;
     constructor(solution: SolutionInfo) {
-        super('Run C Synthesis');
+        const title = 'Run C Synthesis';
+
+        super(title);
         this._solution = solution;
-        // this.iconPath = new vscode.ThemeIcon('loading~spin');
-        this.iconPath = new vscode.ThemeIcon('run', new vscode.ThemeColor('debugIcon.startForeground'));
-        this.command = {
-            title: 'Run C Synthesis',
-            command: 'vitis-hls-ide.projects.runCsynth',
-            arguments: [this._solution]
-        };
+
+        if (vscode.tasks.taskExecutions.some(e => e.task.name === this._solution.csynthTaskName)) {
+            this.iconPath = stopIconPath;
+        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE")) {
+            this.iconPath = loadingIconPath;
+        } else {
+            this.iconPath = startIconPath;
+            this.command = {
+                title: title,
+                command: 'vitis-hls-ide.projects.runCsynth',
+                arguments: [this._solution]
+            };
+        }
     }
 }
 
@@ -134,17 +158,26 @@ class CosimTreeItem extends TreeItem {
 }
 
 class RunCosimTreeItem extends TreeItem {
+
     private _solution: SolutionInfo;
     constructor(solution: SolutionInfo) {
-        super('Run Cosimulation');
+        const title = 'Run Cosimulation';
+
+        super(title);
         this._solution = solution;
-        // this.iconPath = new vscode.ThemeIcon('loading~spin');
-        this.iconPath = new vscode.ThemeIcon('run', new vscode.ThemeColor('debugIcon.startForeground'));
-        this.command = {
-            title: 'Run Cosimulation',
-            command: 'vitis-hls-ide.projects.runCosim',
-            arguments: [this._solution]
-        };
+
+        if (vscode.tasks.taskExecutions.some(e => e.task.name === this._solution.cosimTaskName)) {
+            this.iconPath = stopIconPath;
+        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE")) {
+            this.iconPath = loadingIconPath;
+        } else {
+            this.iconPath = startIconPath;
+            this.command = {
+                title: title,
+                command: 'vitis-hls-ide.projects.runCosim',
+                arguments: [this._solution]
+            };
+        }
     }
 }
 
@@ -153,9 +186,14 @@ export default class ProjectsViewTreeProvider implements vscode.TreeDataProvider
     private _onDidChangeTreeData: vscode.EventEmitter<TreeItem | undefined | void> = new vscode.EventEmitter<TreeItem | undefined | void>();
     readonly onDidChangeTreeData: vscode.Event<TreeItem | undefined | void> = this._onDidChangeTreeData.event;
 
+    disposables: vscode.Disposable[] = [];
+
     constructor() {
         ProjectManager.instance.on('projectsChanged', () => this._onDidChangeTreeData.fire());
-
+        this.disposables = [
+            vscode.tasks.onDidStartTask(() => this._onDidChangeTreeData.fire()),
+            vscode.tasks.onDidEndTask(() => this._onDidChangeTreeData.fire()),
+        ];
     }
 
     getTreeItem(element: ProjectTreeItem): vscode.TreeItem {
@@ -172,5 +210,6 @@ export default class ProjectsViewTreeProvider implements vscode.TreeDataProvider
 
     public dispose() {
         this._onDidChangeTreeData.dispose();
+        this.disposables.forEach(d => d.dispose());
     }
 }

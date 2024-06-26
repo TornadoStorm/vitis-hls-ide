@@ -39,7 +39,7 @@ export default async (solution: SolutionInfo) => {
         const task = new vscode.Task(
             { type: 'shell' },
             vscode.TaskScope.Workspace,
-            'Run C simulation',
+            solution.csimTaskName,
             'Vitis HLS IDE',
             new vscode.ShellExecution(`cd ${path.join(solution.project.path, "..")} && cmd /c "${path.join(vitisPath, "bin", "vitis-run")} --mode hls --tcl ${tclFilePath}"`),
             [],
