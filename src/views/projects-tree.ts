@@ -22,6 +22,7 @@ class ProjectTreeItem extends TreeItem {
     constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
         super(project.name, collapsibleState);
         this._project = project;
+        this.tooltip = project.path;
     }
 
     public getChildren(): Thenable<TreeItem[]> {

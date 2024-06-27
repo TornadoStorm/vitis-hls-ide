@@ -1,7 +1,10 @@
+import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { EventEmitter } from 'stream';
 import * as vscode from 'vscode';
 import { OutputConsole } from './outputConsole';
+import { vitisRun } from './utils/vitisRun';
 
 type ProjectManagerEvents = { 'projectsChanged': [] };
 
@@ -49,18 +52,84 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
         const files = await vscode.workspace.findFiles('**/hls.app', '**/node_modules/**', 10);
 
         if (files.length > 0) {
+            const tempFileName = `vitis-hls-ide-search-${Date.now()}.txt`;
+            const tempFilePath = path.join(os.tmpdir(), tempFileName);
             for (let i = 0; i < files.length; i++) {
                 const absoluteDirPath = path.dirname(files[i].fsPath);
-                const relativeDirPath = vscode.workspace.asRelativePath(absoluteDirPath);
 
                 const project = new ProjectInfo(absoluteDirPath);
-                const solutionFiles = await vscode.workspace.findFiles(relativeDirPath + '/*/*.aps', undefined, 10);
-                const solutions = solutionFiles.map(f => new SolutionInfo(path.basename(path.dirname(f.fsPath)), project));
-                project.solutions.push(...solutions);
 
-                this._projects.push(project);
+                const fetchProjectInfoTclContent =
+                    `open_project ${project.name}\n` +
+                    `set solutions [get_project -solutions]\n` +
+                    `set files [get_files]\n` +
+                    `set testBench [get_files -tb]\n` +
+                    `set outputFile [open "${tempFilePath.replaceAll('\\', '\\\\')}" "w"]\n` +
+                    `puts $outputFile "\\[solutions\\]"\n` +
+                    `foreach solution $solutions { puts $outputFile $solution }\n` +
+                    `puts $outputFile "\\[source\\]"\n` +
+                    `foreach file $files { puts $outputFile $file }\n` +
+                    `puts $outputFile "\\[testbenches\\]"\n` +
+                    `foreach tb $testBench { puts $outputFile $tb }\n` +
+                    `exit`;
+
+                // Find sources
+                const fetchProjectInfoExitCode = await vitisRun(path.join(absoluteDirPath, ".."), fetchProjectInfoTclContent, `Fetch project info for ${project.name}`);
+                if (fetchProjectInfoExitCode !== 0) {
+                    vscode.window.showErrorMessage(`Failed to fetch project info for ${project.name} with exit code ${fetchProjectInfoExitCode}`);
+                    continue;
+                }
+
+                try {
+                    const results = fs.readFileSync(tempFilePath, 'utf8').split('\n');
+                    fs.unlinkSync(tempFilePath);
+
+                    let readMode: 'solutions' | 'source' | 'testbench' = 'solutions';
+                    const solutionNames: string[] = [];
+                    const sources: string[] = [];
+                    const testbenches: string[] = [];
+
+                    results.forEach(line => {
+                        line = line.replace(/[\r\n]+/g, "");
+                        switch (line) {
+                            case '':
+                                return;
+                            case '[solutions]':
+                                readMode = 'solutions';
+                                return;
+                            case '[source]':
+                                readMode = 'source';
+                                return;
+                            case '[testBench]':
+                                readMode = 'testbench';
+                                return;
+                            default:
+                                switch (readMode) {
+                                    case 'solutions':
+                                        solutionNames.push(line);
+                                        break;
+                                    case 'source':
+                                        sources.push(line);
+                                        break;
+                                    case 'testbench':
+                                        testbenches.push(line);
+                                        break;
+                                }
+                        }
+                    });
+
+                    project.solutions.push(...solutionNames.map(name => new SolutionInfo(name, project)));
+                    project.sources.push(...sources);
+                    project.testbenches.push(...testbenches);
+
+                    this._projects.push(project);
+                } catch (error) {
+                    vscode.window.showErrorMessage(`Failed to read project info for ${project.name}: ${error}`);
+                    continue;
+                }
             }
-            OutputConsole.instance.appendLine('Found ' + this._projects.length + ' HLS projects');
+
+            OutputConsole.instance.appendLine('Found ' + this._projects.length + ' HLS project(s)');
         } else {
             OutputConsole.instance.appendLine('No HLS projects found');
         }
@@ -81,12 +150,16 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
 export class ProjectInfo {
     public readonly name: string;
     public readonly path: string;
+    public readonly sources: string[];
+    public readonly testbenches: string[];
     public solutions: SolutionInfo[];
 
-    constructor(absolutePath: string, solutions: SolutionInfo[] = []) {
+    constructor(absolutePath: string, solutions: SolutionInfo[] = [], sources: string[] = [], testbenches: string[] = []) {
         this.name = path.basename(absolutePath);
         this.path = absolutePath;
         this.solutions = solutions;
+        this.sources = sources;
+        this.testbenches = testbenches;
 
         // this.terminal = vscode.window.createTerminal('Vitis HLS IDE - ' + name);
         // this.terminal.sendText('cd ' + this.path);
