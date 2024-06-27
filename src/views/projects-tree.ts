@@ -24,6 +24,7 @@ class ProjectTreeItem extends TreeItem {
         super(project.name, collapsibleState);
         this._project = project;
         this.tooltip = project.path;
+        this.resourceUri = vscode.Uri.file("project");
     }
 
     public getChildren(): Thenable<TreeItem[]> {
@@ -41,7 +42,7 @@ class ProjectSourceItem extends TreeItem {
     constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
         super("Source", collapsibleState);
         this._project = project;
-        this.iconPath = new vscode.ThemeIcon('code');
+        this.resourceUri = vscode.Uri.file("src");
     }
 
     public getChildren(): Thenable<TreeItem[]> {
@@ -68,7 +69,7 @@ class ProjectTestBenchItem extends TreeItem {
     constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
         super("Test Bench", collapsibleState);
         this._project = project;
-        this.iconPath = new vscode.ThemeIcon('beaker');
+        this.resourceUri = vscode.Uri.file("test");
     }
 
     public getChildren(): Thenable<TreeItem[]> {
