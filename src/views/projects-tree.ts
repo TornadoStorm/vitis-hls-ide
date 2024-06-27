@@ -1,3 +1,4 @@
+import path from 'path';
 import * as vscode from 'vscode';
 import ProjectManager, { ProjectInfo, SolutionInfo } from '../projectManager';
 
@@ -6,7 +7,7 @@ const debugIconPath = new vscode.ThemeIcon('debug', new vscode.ThemeColor('debug
 const stopIconPath = new vscode.ThemeIcon('debug-stop', new vscode.ThemeColor('debugIcon.stopForeground'));
 const loadingIconPath = new vscode.ThemeIcon('loading~spin');
 
-abstract class TreeItem extends vscode.TreeItem {
+class TreeItem extends vscode.TreeItem {
     constructor(label: string, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None) {
         super(label, collapsibleState);
     }
@@ -26,7 +27,65 @@ class ProjectTreeItem extends TreeItem {
     }
 
     public getChildren(): Thenable<TreeItem[]> {
-        return Promise.resolve(this._project.solutions.map(s => new SolutionTreeItem(s)));
+        return Promise.resolve([
+            new ProjectSourceItem(this._project),
+            new ProjectTestBenchItem(this._project),
+            ...this._project.solutions.map(s => new SolutionTreeItem(s)),
+        ]);
+    }
+}
+
+class ProjectSourceItem extends TreeItem {
+    private readonly _project: ProjectInfo;
+
+    constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
+        super("Source", collapsibleState);
+        this._project = project;
+        this.iconPath = new vscode.ThemeIcon('code');
+    }
+
+    public getChildren(): Thenable<TreeItem[]> {
+        const sourceItems: TreeItem[] = [];
+        this._project.sources.forEach(s => {
+            const uri = vscode.Uri.file(s);
+            const newItem = new TreeItem(path.basename(s));
+            newItem.resourceUri = uri;
+            newItem.command = {
+                command: 'vscode.open',
+                title: 'Open File',
+                arguments: [uri]
+            };
+            sourceItems.push(newItem);
+        });
+
+        return Promise.resolve(sourceItems);
+    }
+}
+
+class ProjectTestBenchItem extends TreeItem {
+    private readonly _project: ProjectInfo;
+
+    constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
+        super("Test Bench", collapsibleState);
+        this._project = project;
+        this.iconPath = new vscode.ThemeIcon('beaker');
+    }
+
+    public getChildren(): Thenable<TreeItem[]> {
+        const tbItems: TreeItem[] = [];
+        this._project.testbenches.forEach(tb => {
+            const uri = vscode.Uri.file(tb);
+            const newItem = new TreeItem(path.basename(tb));
+            newItem.resourceUri = uri;
+            newItem.command = {
+                command: 'vscode.open',
+                title: 'Open File',
+                arguments: [uri]
+            };
+            tbItems.push(newItem);
+        });
+
+        return Promise.resolve(tbItems);
     }
 }
 

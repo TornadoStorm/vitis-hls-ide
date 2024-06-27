@@ -69,12 +69,15 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
                     `foreach solution $solutions { puts $outputFile $solution }\n` +
                     `puts $outputFile "\\[source\\]"\n` +
                     `foreach file $files { puts $outputFile $file }\n` +
-                    `puts $outputFile "\\[testbenches\\]"\n` +
+                    `puts $outputFile "\\[testbench\\]"\n` +
                     `foreach tb $testBench { puts $outputFile $tb }\n` +
                     `exit`;
 
                 // Find sources
-                const fetchProjectInfoExitCode = await vitisRun(path.join(absoluteDirPath, ".."), fetchProjectInfoTclContent, `Fetch project info for ${project.name}`);
+                const executeLocation = path.join(absoluteDirPath, "..");
+                const fetchProjectInfoExitCode = await vitisRun(executeLocation, fetchProjectInfoTclContent, `Fetch project info for ${project.name}`, {
+                    reveal: vscode.TaskRevealKind.Silent, close: true
+                });
                 if (fetchProjectInfoExitCode !== 0) {
                     vscode.window.showErrorMessage(`Failed to fetch project info for ${project.name} with exit code ${fetchProjectInfoExitCode}`);
                     continue;
@@ -100,7 +103,7 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
                             case '[source]':
                                 readMode = 'source';
                                 return;
-                            case '[testBench]':
+                            case '[testbench]':
                                 readMode = 'testbench';
                                 return;
                             default:
@@ -109,10 +112,10 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
                                         solutionNames.push(line);
                                         break;
                                     case 'source':
-                                        sources.push(line);
+                                        sources.push(path.join(executeLocation, line));
                                         break;
                                     case 'testbench':
-                                        testbenches.push(line);
+                                        testbenches.push(path.join(executeLocation, line));
                                         break;
                                 }
                         }
