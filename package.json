@@ -67,7 +67,7 @@
       },
       {
         "command": "vitis-hls-ide.projects.source.addFiles",
-        "title": "Add source file",
+        "title": "Add source files",
         "icon": "$(file-add)"
       }
     ],
