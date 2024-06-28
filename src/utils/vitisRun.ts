@@ -17,12 +17,22 @@ export async function vitisRun(startPath: vscode.Uri, tcl: string, taskName: str
 
     fs.writeFileSync(tclFilePath, tcl);
 
+    const shellExecution = new vscode.ShellExecution(
+        `vitis-run --mode hls --tcl ${tclFilePath}`,
+        {
+            cwd: startPath.fsPath,
+            env: {
+                PATH: process.env.PATH + path.delimiter + path.join(vitisPath, "bin"),
+            }
+        },
+    );
+
     const task = new vscode.Task(
         { type: 'shell' },
         vscode.TaskScope.Workspace,
         taskName,
         'Vitis HLS IDE',
-        new vscode.ShellExecution(`cd ${startPath.fsPath} && cmd /c "${path.join(vitisPath, "bin", "vitis-run")} --mode hls --tcl ${tclFilePath}"`),
+        shellExecution,
         [],
     );
 
