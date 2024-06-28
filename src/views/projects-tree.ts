@@ -23,7 +23,7 @@ class ProjectTreeItem extends TreeItem {
     constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
         super(project.name, collapsibleState);
         this._project = project;
-        this.tooltip = project.path;
+        this.tooltip = project.uri.fsPath;
         this.resourceUri = vscode.Uri.file("project");
     }
 
@@ -36,20 +36,20 @@ class ProjectTreeItem extends TreeItem {
     }
 }
 
-class ProjectSourceItem extends TreeItem {
-    private readonly _project: ProjectInfo;
+export class ProjectSourceItem extends TreeItem {
+    public readonly project: ProjectInfo;
 
-    constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
+    constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Collapsed) {
         super("Source", collapsibleState);
-        this._project = project;
+        this.project = project;
         this.resourceUri = vscode.Uri.file("src");
+        this.contextValue = 'projectSourceItem';
     }
 
     public getChildren(): Thenable<TreeItem[]> {
         const sourceItems: TreeItem[] = [];
-        this._project.sources.forEach(s => {
-            const uri = vscode.Uri.file(s);
-            const newItem = new TreeItem(path.basename(s));
+        this.project.sources.forEach(uri => {
+            const newItem = new TreeItem(path.basename(uri.fsPath));
             newItem.resourceUri = uri;
             newItem.command = {
                 command: 'vscode.open',
@@ -66,7 +66,7 @@ class ProjectSourceItem extends TreeItem {
 class ProjectTestBenchItem extends TreeItem {
     private readonly _project: ProjectInfo;
 
-    constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
+    constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Collapsed) {
         super("Test Bench", collapsibleState);
         this._project = project;
         this.resourceUri = vscode.Uri.file("test");
@@ -74,9 +74,8 @@ class ProjectTestBenchItem extends TreeItem {
 
     public getChildren(): Thenable<TreeItem[]> {
         const tbItems: TreeItem[] = [];
-        this._project.testbenches.forEach(tb => {
-            const uri = vscode.Uri.file(tb);
-            const newItem = new TreeItem(path.basename(tb));
+        this._project.testbenches.forEach(uri => {
+            const newItem = new TreeItem(path.basename(uri.fsPath));
             newItem.resourceUri = uri;
             newItem.command = {
                 command: 'vscode.open',

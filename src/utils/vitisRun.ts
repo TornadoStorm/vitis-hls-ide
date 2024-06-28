@@ -4,7 +4,7 @@ import path from 'path';
 import * as vscode from 'vscode';
 
 // Returns undefined if the task was terminated by the user.
-export async function vitisRun(startPath: string, tcl: string, taskName: string, presentationOptions?: vscode.TaskPresentationOptions): Promise<number | undefined> {
+export async function vitisRun(startPath: vscode.Uri, tcl: string, taskName: string, presentationOptions?: vscode.TaskPresentationOptions): Promise<number | undefined> {
     const vitisPath = vscode.workspace.getConfiguration('vitis-hls-ide')?.get<string>('vitisPath');
 
     if (!vitisPath) {
@@ -22,7 +22,7 @@ export async function vitisRun(startPath: string, tcl: string, taskName: string,
         vscode.TaskScope.Workspace,
         taskName,
         'Vitis HLS IDE',
-        new vscode.ShellExecution(`cd ${startPath} && cmd /c "${path.join(vitisPath, "bin", "vitis-run")} --mode hls --tcl ${tclFilePath}"`),
+        new vscode.ShellExecution(`cd ${startPath.fsPath} && cmd /c "${path.join(vitisPath, "bin", "vitis-run")} --mode hls --tcl ${tclFilePath}"`),
         [],
     );
 

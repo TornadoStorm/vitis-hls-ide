@@ -1,13 +1,14 @@
 import path from 'path';
 import * as vscode from 'vscode';
-import debugCsim from './commands/projects.debugCsim';
-import runCosim from './commands/projects.runCosim';
-import runCsim from './commands/projects.runCsim';
-import runCsynth from './commands/projects.runCsynth';
-import stopCosim from './commands/projects.stopCosim';
-import stopCsim from './commands/projects.stopCsim';
-import stopCsynth from './commands/projects.stopCsynth';
-import stopDebugCsim from './commands/projects.stopDebugCsim';
+import addSourceFile from './commands/project/modify/projects.source.addFiles';
+import debugCsim from './commands/project/run/projects.debugCsim';
+import runCosim from './commands/project/run/projects.runCosim';
+import runCsim from './commands/project/run/projects.runCsim';
+import runCsynth from './commands/project/run/projects.runCsynth';
+import stopCosim from './commands/project/run/projects.stopCosim';
+import stopCsim from './commands/project/run/projects.stopCsim';
+import stopCsynth from './commands/project/run/projects.stopCsynth';
+import stopDebugCsim from './commands/project/run/projects.stopDebugCsim';
 import { OutputConsole } from './outputConsole';
 import ProjectManager from './projectManager';
 import ProjectsViewTreeProvider from './views/projects-tree';
@@ -30,6 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsim', stopCsim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsynth', stopCsynth),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCosim', stopCosim),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.source.addFiles', addSourceFile),
 		projectsViewProvider,
 		OutputConsole.instance,
 		ProjectManager.instance,

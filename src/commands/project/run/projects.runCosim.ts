@@ -1,8 +1,7 @@
-import path from 'path';
 import * as vscode from 'vscode';
-import { OutputConsole } from '../outputConsole';
-import { SolutionInfo } from "../projectManager";
-import { vitisRun } from '../utils/vitisRun';
+import { OutputConsole } from '../../../outputConsole';
+import { SolutionInfo } from "../../../projectManager";
+import { vitisRun } from '../../../utils/vitisRun';
 
 export default async (solution: SolutionInfo) => {
     if (vscode.tasks.taskExecutions.some(value => value.task.source === 'Vitis HLS IDE')) {
@@ -18,15 +17,15 @@ export default async (solution: SolutionInfo) => {
 
     OutputConsole.instance.appendLine('Running cosimulation...');
 
-    const exitCode = await vitisRun(path.join(solution.project.path, ".."), tclContent, solution.cosimTaskName, {
+    const exitCode = await vitisRun(vscode.Uri.joinPath(solution.project.uri, ".."), tclContent, solution.cosimTaskName, {
         reveal: vscode.TaskRevealKind.Always,
         panel: vscode.TaskPanelKind.Shared,
         showReuseMessage: true,
         clear: true,
     });
 
-    const resultsFile = path.join(solution.project.path, solution.name, `${solution.name}.log`);
-    await vscode.workspace.fs.readFile(vscode.Uri.file(resultsFile)).then(content => {
+    const resultsFile = vscode.Uri.joinPath(solution.uri, `${solution.name}.log`);
+    await vscode.workspace.fs.readFile(resultsFile).then(content => {
         OutputConsole.instance.appendLine(content.toString());
     });
 

@@ -55,8 +55,7 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
             const tempFileName = `vitis-hls-ide-search-${Date.now()}.txt`;
             const tempFilePath = path.join(os.tmpdir(), tempFileName);
             for (let i = 0; i < files.length; i++) {
-                const absoluteDirPath = path.dirname(files[i].fsPath);
-
+                const absoluteDirPath = vscode.Uri.joinPath(files[i], '..');
                 const project = new ProjectInfo(absoluteDirPath);
 
                 const fetchProjectInfoTclContent =
@@ -74,7 +73,7 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
                     `exit`;
 
                 // Find sources
-                const executeLocation = path.join(absoluteDirPath, "..");
+                const executeLocation = vscode.Uri.joinPath(absoluteDirPath, "..");
                 const fetchProjectInfoExitCode = await vitisRun(executeLocation, fetchProjectInfoTclContent, `Fetch project info for ${project.name}`, {
                     reveal: vscode.TaskRevealKind.Silent, close: true
                 });
@@ -89,8 +88,8 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
 
                     let readMode: 'solutions' | 'source' | 'testbench' = 'solutions';
                     const solutionNames: string[] = [];
-                    const sources: string[] = [];
-                    const testbenches: string[] = [];
+                    const sources: vscode.Uri[] = [];
+                    const testbenches: vscode.Uri[] = [];
 
                     results.forEach(line => {
                         line = line.replace(/[\r\n]+/g, "");
@@ -112,10 +111,10 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
                                         solutionNames.push(line);
                                         break;
                                     case 'source':
-                                        sources.push(path.join(executeLocation, line));
+                                        sources.push(vscode.Uri.joinPath(executeLocation, line));
                                         break;
                                     case 'testbench':
-                                        testbenches.push(path.join(executeLocation, line));
+                                        testbenches.push(vscode.Uri.joinPath(executeLocation, line));
                                         break;
                                 }
                         }
@@ -152,14 +151,14 @@ export default class ProjectManager extends EventEmitter<ProjectManagerEvents> {
 
 export class ProjectInfo {
     public readonly name: string;
-    public readonly path: string;
-    public readonly sources: string[];
-    public readonly testbenches: string[];
+    public readonly uri: vscode.Uri;
+    public readonly sources: vscode.Uri[];
+    public readonly testbenches: vscode.Uri[];
     public solutions: SolutionInfo[];
 
-    constructor(absolutePath: string, solutions: SolutionInfo[] = [], sources: string[] = [], testbenches: string[] = []) {
-        this.name = path.basename(absolutePath);
-        this.path = absolutePath;
+    constructor(uri: vscode.Uri, solutions: SolutionInfo[] = [], sources: vscode.Uri[] = [], testbenches: vscode.Uri[] = []) {
+        this.name = path.basename(uri.fsPath);
+        this.uri = uri;
         this.solutions = solutions;
         this.sources = sources;
         this.testbenches = testbenches;
@@ -181,11 +180,15 @@ export class SolutionInfo {
     public readonly csynthTaskName: string;
     public readonly cosimTaskName: string;
 
+    public get uri(): vscode.Uri {
+        return vscode.Uri.joinPath(this.project.uri, this.name);
+    }
+
     constructor(name: string, project: ProjectInfo) {
         this.name = name;
         this.project = project;
 
-        const id = path.join(this.project.path, this.name);
+        const id = path.join(this.project.uri.fsPath, this.name);
         this.debugCsimTaskName = `Debug C simulation for ${id}`;
         this.csimTaskName = `C simulation for ${id}`;
         this.csynthTaskName = `C synthesis for ${id}`;

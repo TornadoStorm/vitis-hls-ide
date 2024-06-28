@@ -64,6 +64,11 @@
         "command": "vitis-hls-ide.projects.refresh",
         "title": "Vitis HLS IDE: Refresh Projects",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "vitis-hls-ide.projects.source.addFiles",
+        "title": "Add source file",
+        "icon": "$(file-add)"
       }
     ],
     "viewsContainers": {
@@ -89,6 +94,13 @@
           "command": "vitis-hls-ide.projects.refresh",
           "when": "view == projectsView",
           "group": "navigation@0"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "vitis-hls-ide.projects.source.addFiles",
+          "when": "view == projectsView && viewItem == projectSourceItem",
+          "group": "inline"
         }
       ]
     }
