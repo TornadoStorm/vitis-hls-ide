@@ -15,7 +15,6 @@ import ProjectsViewTreeProvider from './views/projects-tree';
 
 // TODO Make Vitis Unified IDE optional
 // TODO Proper feedback to let ppl know they don't have Vitis Unified IDE
-// TODO Stop using '&&'
 
 export function activate(context: vscode.ExtensionContext) {
 	OutputConsole.instance.appendLine('Vitis HLS IDE extension activated');
