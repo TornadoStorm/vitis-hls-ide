@@ -1,16 +1,17 @@
-## Introduction
+# Vitis HLS IDE Extension for Visual Studio Code
 
-A [VS Code](https://code.visualstudio.com/) extension to provide a means of managing and developing Vitis HLS projects outside of the official Vitis HLS IDE.
+A [VS Code](https://code.visualstudio.com/) extension to provide a means of managing and developing Vitis HLS projects from the comfort of your VS Code IDE.
 
-NOTE: This extension is still very much in its early development stages, so may result in modifying your files in unintended ways. Please proceed with caution, I take to responsibility for files that become edited, removed, corrupted or created in unintended ways. Here be dragons!
+NOTE: This extension is still in its early stages of development, and it may modify your files in unintended ways. Please ensure you have backed up your data before using this extension. Here be dragons!
 
 ## Features
 
-- List and detect multiple Vitis HLS projects from within one workspace
+- Manage multiple Vitis HLS projects from within one workspace
 - Run C simulation
 - Debug C simulation (WIP)
 - Run C synthesis
 - Run C/RTL cosimulation
+- Add & remove source & test bench files
 
 ## Requirements
 
@@ -26,9 +27,3 @@ This extension contributes the following settings:
 ## Known Issues
 
 - Debug C simulation instantly closing
-
-## Release Notes
-
-### 0.0.1
-
-Initial release
