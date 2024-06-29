@@ -1,6 +1,7 @@
 import path from 'path';
 import * as vscode from 'vscode';
-import addSourceFile from './commands/project/modify/projects.source.addFiles';
+import addSourceFiles from './commands/project/modify/projects.source.addFiles';
+import removeSourceFile from './commands/project/modify/projects.source.removeFile';
 import debugCsim from './commands/project/run/projects.debugCsim';
 import runCosim from './commands/project/run/projects.runCosim';
 import runCsim from './commands/project/run/projects.runCsim';
@@ -15,6 +16,8 @@ import ProjectsViewTreeProvider from './views/projects-tree';
 
 // TODO Make Vitis Unified IDE optional
 // TODO Proper feedback to let ppl know they don't have Vitis Unified IDE
+// TODO Instead of just refreshing, listen to hls.app files, and listen for newly added files
+// TODO When refreshing, only update tree view once new data added
 
 export function activate(context: vscode.ExtensionContext) {
 	OutputConsole.instance.appendLine('Vitis HLS IDE extension activated');
@@ -34,7 +37,8 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsim', stopCsim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsynth', stopCsynth),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCosim', stopCosim),
-		vscode.commands.registerCommand('vitis-hls-ide.projects.source.addFiles', addSourceFile),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.source.addFiles', addSourceFiles),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.source.removeFile', removeSourceFile),
 		projectsViewProvider,
 		OutputConsole.instance,
 		ProjectManager.instance,

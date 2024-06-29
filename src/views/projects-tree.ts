@@ -49,17 +49,27 @@ export class ProjectSourceItem extends TreeItem {
     public getChildren(): Thenable<TreeItem[]> {
         const sourceItems: TreeItem[] = [];
         this.project.sources.forEach(uri => {
-            const newItem = new TreeItem(path.basename(uri.fsPath));
-            newItem.resourceUri = uri;
-            newItem.command = {
-                command: 'vscode.open',
-                title: 'Open File',
-                arguments: [uri]
-            };
+            const newItem = new ProjectSourceFileItem(uri, this.project);
             sourceItems.push(newItem);
         });
 
         return Promise.resolve(sourceItems);
+    }
+}
+
+export class ProjectSourceFileItem extends TreeItem {
+    public readonly project: ProjectInfo;
+
+    constructor(uri: vscode.Uri, project: ProjectInfo) {
+        super(path.basename(uri.fsPath));
+        this.project = project;
+        this.resourceUri = uri;
+        this.contextValue = 'projectSourceFileItem';
+        this.command = {
+            command: 'vscode.open',
+            title: 'Open File',
+            arguments: [uri]
+        };
     }
 }
 

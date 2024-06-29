@@ -25,7 +25,6 @@ export default async (item: ProjectSourceItem) => {
     }
     tclContent += 'exit';
 
-
     const exitCode = await vitisRun(
         startPath,
         tclContent,
