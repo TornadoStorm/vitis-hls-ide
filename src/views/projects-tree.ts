@@ -20,7 +20,7 @@ class TreeItem extends vscode.TreeItem {
 class ProjectTreeItem extends TreeItem {
     private readonly _project: ProjectInfo;
 
-    constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Expanded) {
+    constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Collapsed) {
         super(project.name, collapsibleState);
         this._project = project;
         this.tooltip = project.uri.fsPath;
@@ -47,13 +47,7 @@ export class ProjectSourceItem extends TreeItem {
     }
 
     public getChildren(): Thenable<TreeItem[]> {
-        const sourceItems: TreeItem[] = [];
-        this.project.sources.forEach(uri => {
-            const newItem = new ProjectSourceFileItem(uri, this.project);
-            sourceItems.push(newItem);
-        });
-
-        return Promise.resolve(sourceItems);
+        return Promise.resolve(this.project.sources.map(uri => new ProjectSourceFileItem(uri, this.project)));
     }
 }
 
@@ -74,28 +68,33 @@ export class ProjectSourceFileItem extends TreeItem {
 }
 
 class ProjectTestBenchItem extends TreeItem {
-    private readonly _project: ProjectInfo;
+    public readonly project: ProjectInfo;
 
     constructor(project: ProjectInfo, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Collapsed) {
         super("Test Bench", collapsibleState);
-        this._project = project;
+        this.project = project;
         this.resourceUri = vscode.Uri.file("test");
+        this.contextValue = 'projectTestBenchItem';
     }
 
     public getChildren(): Thenable<TreeItem[]> {
-        const tbItems: TreeItem[] = [];
-        this._project.testbenches.forEach(uri => {
-            const newItem = new TreeItem(path.basename(uri.fsPath));
-            newItem.resourceUri = uri;
-            newItem.command = {
-                command: 'vscode.open',
-                title: 'Open File',
-                arguments: [uri]
-            };
-            tbItems.push(newItem);
-        });
+        return Promise.resolve(this.project.testbenches.map(uri => new ProjectTestBenchFileItem(uri, this.project)));
+    }
+}
 
-        return Promise.resolve(tbItems);
+export class ProjectTestBenchFileItem extends TreeItem {
+    public readonly project: ProjectInfo;
+
+    constructor(uri: vscode.Uri, project: ProjectInfo) {
+        super(path.basename(uri.fsPath));
+        this.project = project;
+        this.resourceUri = uri;
+        this.contextValue = 'projectTestBenchFileItem';
+        this.command = {
+            command: 'vscode.open',
+            title: 'Open File',
+            arguments: [uri]
+        };
     }
 }
 

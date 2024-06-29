@@ -1,12 +1,15 @@
+import lodash from 'lodash';
 import path from 'path';
 import * as vscode from 'vscode';
+import { ProjectInfo } from '../../../projectManager';
 import { vitisRun } from '../../../utils/vitisRun';
-import { ProjectSourceItem } from '../../../views/projects-tree';
 
-export default async (item: ProjectSourceItem) => {
+export default async (project: ProjectInfo, testBench: boolean) => {
+    const nameType = testBench ? 'test bench' : 'source';
+
     const options: vscode.OpenDialogOptions = {
         canSelectMany: true,
-        openLabel: 'Add Source Files',
+        openLabel: `Add ${lodash.startCase(nameType)} Files`,
         filters: {
             'C++ Source and Header Files': ['cpp', 'h']
         }
@@ -16,19 +19,19 @@ export default async (item: ProjectSourceItem) => {
 
     if (uris === undefined) { return; }
 
-    const startPath = vscode.Uri.joinPath(item.project.uri, "..");
+    const startPath = vscode.Uri.joinPath(project.uri, "..");
 
-    let tclContent = `open_project ${item.project.name}\n`;
+    let tclContent = `open_project ${project.name}\n`;
     for (const uri of uris) {
         const relativePath = path.relative(startPath.fsPath, uri.fsPath);
-        tclContent += `add_files "${relativePath.replaceAll('\\', '\\\\')}"\n`;
+        tclContent += `add_files ${testBench ? '-tb ' : ' '}"${relativePath.replaceAll('\\', '\\\\')}"\n`;
     }
     tclContent += 'exit';
 
     const exitCode = await vitisRun(
         startPath,
         tclContent,
-        `Add source files to ${item.project.name}`,
+        `Add ${nameType} files to ${project.name}`,
         {
             reveal: vscode.TaskRevealKind.Silent,
             panel: vscode.TaskPanelKind.Shared,
@@ -37,9 +40,9 @@ export default async (item: ProjectSourceItem) => {
         });
 
     if (exitCode === 0) {
-        vscode.window.showInformationMessage('Source files added successfully');
+        vscode.window.showInformationMessage(`${lodash.upperFirst(nameType)} files added successfully`);
     } else {
-        vscode.window.showErrorMessage('Failed to add source files');
+        vscode.window.showErrorMessage(`Failed to add ${nameType} files`);
     }
 
     await vscode.commands.executeCommand('vitis-hls-ide.projects.refresh');

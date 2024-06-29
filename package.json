@@ -74,6 +74,16 @@
         "command": "vitis-hls-ide.projects.source.removeFile",
         "title": "Remove source file",
         "icon": "$(remove)"
+      },
+      {
+        "command": "vitis-hls-ide.projects.testbench.addFiles",
+        "title": "Add test bench files",
+        "icon": "$(file-add)"
+      },
+      {
+        "command": "vitis-hls-ide.projects.testbench.removeFile",
+        "title": "Remove test bench file",
+        "icon": "$(remove)"
       }
     ],
     "viewsContainers": {
@@ -94,6 +104,28 @@
       ]
     },
     "menus": {
+      "commandPalette": [
+        {
+          "command": "vitis-hls-ide.projects.refresh",
+          "when": "false"
+        },
+        {
+          "command": "vitis-hls-ide.projects.source.addFiles",
+          "when": "false"
+        },
+        {
+          "command": "vitis-hls-ide.projects.source.removeFile",
+          "when": "false"
+        },
+        {
+          "command": "vitis-hls-ide.projects.testbench.addFiles",
+          "when": "false"
+        },
+        {
+          "command": "vitis-hls-ide.projects.testbench.removeFile",
+          "when": "false"
+        }
+      ],
       "view/title": [
         {
           "command": "vitis-hls-ide.projects.refresh",
@@ -110,6 +142,16 @@
         {
           "command": "vitis-hls-ide.projects.source.removeFile",
           "when": "view == projectsView && viewItem == projectSourceFileItem",
+          "group": "inline"
+        },
+        {
+          "command": "vitis-hls-ide.projects.testbench.addFiles",
+          "when": "view == projectsView && viewItem == projectTestBenchItem",
+          "group": "inline"
+        },
+        {
+          "command": "vitis-hls-ide.projects.testbench.removeFile",
+          "when": "view == projectsView && viewItem == projectTestBenchFileItem",
           "group": "inline"
         }
       ]
@@ -138,7 +180,9 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.6",
     "@types/xml2js": "^0.4.14",
+    "lodash": "^4.17.21",
     "xml2js": "^0.6.2"
   }
 }
