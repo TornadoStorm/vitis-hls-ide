@@ -1,17 +1,17 @@
 import lodash from 'lodash';
 import path from 'path';
 import * as vscode from 'vscode';
-import { ProjectInfo } from '../../../projectManager';
+import { HLSProject } from '../../../models/hlsProject';
 import { vitisRun } from '../../../utils/vitisRun';
 
-export default async (project: ProjectInfo, testBench: boolean) => {
+export default async (project: HLSProject, testBench: boolean) => {
     const nameType = testBench ? 'test bench' : 'source';
 
     const options: vscode.OpenDialogOptions = {
         canSelectMany: true,
         openLabel: `Add ${lodash.startCase(nameType)} Files`,
         filters: {
-            'C++ Source and Header Files': ['cpp', 'h']
+            'C++ Source and Header Files': ['cpp', 'h', 'hpp']
         }
     };
 

@@ -12,7 +12,7 @@ import stopCsynth from './commands/project/run/projects.stopCsynth';
 import stopDebugCsim from './commands/project/run/projects.stopDebugCsim';
 import { OutputConsole } from './outputConsole';
 import ProjectManager from './projectManager';
-import ProjectsViewTreeProvider, { ProjectSourceFileItem } from './views/projects-tree';
+import ProjectsViewTreeProvider, { ProjectFileItem, ProjectSourceItem, ProjectTestBenchItem } from './views/projects-tree';
 
 // TODO Make Vitis Unified IDE optional
 // TODO Proper feedback to let ppl know they don't have Vitis Unified IDE
@@ -37,10 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsim', stopCsim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsynth', stopCsynth),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCosim', stopCosim),
-		vscode.commands.registerCommand('vitis-hls-ide.projects.source.addFiles', (e: ProjectSourceFileItem) => addFiles(e.project, false)),
-		vscode.commands.registerCommand('vitis-hls-ide.projects.source.removeFile', (e: ProjectSourceFileItem) => removeFile(e.project, e.resourceUri!, false)),
-		vscode.commands.registerCommand('vitis-hls-ide.projects.testbench.addFiles', (e: ProjectSourceFileItem) => addFiles(e.project, true)),
-		vscode.commands.registerCommand('vitis-hls-ide.projects.testbench.removeFile', (e: ProjectSourceFileItem) => removeFile(e.project, e.resourceUri!, true)),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.source.addFiles', (e: ProjectSourceItem) => addFiles(e.project, false)),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.source.removeFile', (e: ProjectFileItem) => removeFile(e.project, e.resourceUri!, false)),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.testbench.addFiles', (e: ProjectTestBenchItem) => addFiles(e.project, true)),
+		vscode.commands.registerCommand('vitis-hls-ide.projects.testbench.removeFile', (e: ProjectFileItem) => removeFile(e.project, e.resourceUri!, true)),
 		projectsViewProvider,
 		OutputConsole.instance,
 		ProjectManager.instance,

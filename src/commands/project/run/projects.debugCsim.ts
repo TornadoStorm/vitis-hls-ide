@@ -1,8 +1,9 @@
 import path from 'path';
 import * as vscode from 'vscode';
-import { SolutionInfo } from '../../../projectManager';
+import { HLSProject } from '../../../models/hlsProject';
+import { HLSProjectSolution } from '../../../models/hlsProjectSolution';
 
-export default async (solution: SolutionInfo) => {
+export default async (project: HLSProject, solution: HLSProjectSolution) => {
     const hlsPath = vscode.workspace.getConfiguration('vitis-hls-ide')?.get<string>('hlsPath');
 
     if (!hlsPath) {
@@ -13,10 +14,10 @@ export default async (solution: SolutionInfo) => {
     // TODO: Build csim as debug prelaunch task
 
     const debugConfig: vscode.DebugConfiguration = {
-        "name": solution.debugCsimTaskName,
+        "name": solution.debugCsimTaskName(project),
         "type": "cppdbg",
         "request": "launch",
-        "program": vscode.Uri.joinPath(solution.uri, "csim/build/csim.exe"),
+        "program": vscode.Uri.joinPath(project.uri, solution.name, "csim/build/csim.exe"),
         "args": [],
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}",

@@ -2,9 +2,9 @@ import lodash from 'lodash';
 import path from 'path';
 import * as vscode from 'vscode';
 import xml2js from 'xml2js';
-import { ProjectInfo } from '../../../projectManager';
+import { HLSProject } from '../../../models/hlsProject';
 
-export default async (project: ProjectInfo, uri: vscode.Uri, testBench: boolean) => {
+export default async (project: HLSProject, uri: vscode.Uri, testBench: boolean) => {
     const nameType = testBench ? 'test bench' : 'source';
 
     const confirmOption: vscode.MessageItem = { title: 'OK' };

@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
+import { HLSProject } from '../../../models/hlsProject';
+import { HLSProjectSolution } from '../../../models/hlsProjectSolution';
 import { OutputConsole } from '../../../outputConsole';
-import { SolutionInfo } from "../../../projectManager";
 
-export default async (solution: SolutionInfo) => {
-    const task = vscode.tasks.taskExecutions.find(e => e.task.name === solution.csimTaskName);
+export default async (project: HLSProject, solution: HLSProjectSolution) => {
+    const task = vscode.tasks.taskExecutions.find(e => e.task.name === solution.csimTaskName(project));
 
     if (!task) {
         return;
@@ -18,7 +19,7 @@ export default async (solution: SolutionInfo) => {
         if (e.execution.task.name === task.task.name) {
             taskEndListener.dispose();
 
-            const filePathToWatch = vscode.Uri.joinPath(solution.uri, `${solution.name}.log`);
+            const filePathToWatch = vscode.Uri.joinPath(project.uri, solution.name, `${solution.name}.log`);
 
             await vscode.workspace.fs.readFile(filePathToWatch).then(content => {
                 OutputConsole.instance.appendLine(content.toString());

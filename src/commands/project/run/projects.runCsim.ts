@@ -1,30 +1,31 @@
 import * as vscode from 'vscode';
+import { HLSProject } from '../../../models/hlsProject';
+import { HLSProjectSolution } from '../../../models/hlsProjectSolution';
 import { OutputConsole } from '../../../outputConsole';
-import { SolutionInfo } from "../../../projectManager";
 import { vitisRun } from '../../../utils/vitisRun';
 
-export default async (solution: SolutionInfo) => {
+export default async (project: HLSProject, solution: HLSProjectSolution) => {
     if (vscode.tasks.taskExecutions.some(value => value.task.source === 'Vitis HLS IDE')) {
         vscode.window.showErrorMessage('A task is already running. Please wait for it to finish before running another one.');
         return;
     }
 
     const tclContent =
-        `open_project ${solution.project.name}\n` +
+        `open_project ${project.name}\n` +
         `open_solution ${solution.name}\n` +
         `csim_design\n` +
         `exit`;
 
     OutputConsole.instance.appendLine('Running C simulation...');
 
-    const exitCode = await vitisRun(vscode.Uri.joinPath(solution.project.uri, ".."), tclContent, solution.csimTaskName, {
+    const exitCode = await vitisRun(vscode.Uri.joinPath(project.uri, ".."), tclContent, solution.csimTaskName(project), {
         reveal: vscode.TaskRevealKind.Always,
         panel: vscode.TaskPanelKind.Shared,
         showReuseMessage: true,
         clear: true,
     });
 
-    const resultsFile = vscode.Uri.joinPath(solution.uri, `${solution.name}.log`);
+    const resultsFile = vscode.Uri.joinPath(project.uri, solution.name, `${solution.name}.log`);
     await vscode.workspace.fs.readFile(resultsFile).then(content => {
         OutputConsole.instance.appendLine(content.toString());
     });
