@@ -155,7 +155,24 @@
           "group": "inline"
         }
       ]
-    }
+    },
+    "problemMatchers": [
+      {
+        "name": "vitis-hls-ide-csim",
+        "owner": "vitis-hls-ide",
+        "fileLocation": "absolute",
+        "pattern": [
+          {
+            "regexp": "^([^:]*:[^:]*):(\\d+):((\\d+):)? ((warning|error|note): )?(.*)",
+            "file": 1,
+            "line": 2,
+            "column": 4,
+            "severity": 6,
+            "message": 7
+          }
+        ]
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

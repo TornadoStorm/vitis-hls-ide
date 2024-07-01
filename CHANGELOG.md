@@ -35,3 +35,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Project view items now preserve collapsed/expanded state on reload
 - Greatly improved loading & reloading times in projects view
+
+## [0.2.2] -- 2024-07-01
+
+### Removed
+
+- Removed "Debug C Simulation" button
+- Running C Simulation no longer outputs to output channel
+
+### Changed
+
+- "Run C Simulation" now builds csim binaries & runs a debug session, showing build errors in the Problems output

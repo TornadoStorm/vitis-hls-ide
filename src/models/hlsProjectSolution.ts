@@ -19,7 +19,7 @@ export class HLSProjectSolution {
         return `Debug C simulation for ${path.join(project.uri.fsPath, this.name)}`;
     }
 
-    public csimTaskName(project: HLSProject): string {
+    public buildCsimTaskName(project: HLSProject): string {
         return `C simulation for ${path.join(project.uri.fsPath, this.name)}`;
     }
 

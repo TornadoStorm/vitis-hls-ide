@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
+import { taskSource } from '../../../constants';
 import { HLSProject } from '../../../models/hlsProject';
 import { HLSProjectSolution } from '../../../models/hlsProjectSolution';
 import { OutputConsole } from '../../../outputConsole';
 import { vitisRun } from '../../../utils/vitisRun';
 
 export default async (project: HLSProject, solution: HLSProjectSolution) => {
-    if (vscode.tasks.taskExecutions.some(value => value.task.source === 'Vitis HLS IDE')) {
+    if (vscode.tasks.taskExecutions.some(value => value.task.source === taskSource)) {
         vscode.window.showErrorMessage('A task is already running. Please wait for it to finish before running another one.');
         return;
     }

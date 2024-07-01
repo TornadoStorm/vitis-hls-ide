@@ -2,14 +2,12 @@ import path from 'path';
 import * as vscode from 'vscode';
 import addFiles from './commands/project/modify/addFiles';
 import removeFile from './commands/project/modify/removeFile';
-import debugCsim from './commands/project/run/projects.debugCsim';
 import runCosim from './commands/project/run/projects.runCosim';
 import runCsim from './commands/project/run/projects.runCsim';
 import runCsynth from './commands/project/run/projects.runCsynth';
 import stopCosim from './commands/project/run/projects.stopCosim';
 import stopCsim from './commands/project/run/projects.stopCsim';
 import stopCsynth from './commands/project/run/projects.stopCsynth';
-import stopDebugCsim from './commands/project/run/projects.stopDebugCsim';
 import { OutputConsole } from './outputConsole';
 import ProjectManager from './projectManager';
 import ProjectsViewTreeProvider, { ProjectFileItem, ProjectSourceItem, ProjectTestBenchItem } from './views/projects-tree';
@@ -29,11 +27,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('vitis-hls-ide.projects.refresh', () => ProjectManager.instance.refresh()),
-		vscode.commands.registerCommand('vitis-hls-ide.projects.debugCsim', debugCsim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.runCosim', runCosim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.runCsim', runCsim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.runCsynth', runCsynth),
-		vscode.commands.registerCommand('vitis-hls-ide.projects.stopDebugCsim', stopDebugCsim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsim', stopCsim),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCsynth', stopCsynth),
 		vscode.commands.registerCommand('vitis-hls-ide.projects.stopCosim', stopCosim),

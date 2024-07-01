@@ -6,7 +6,6 @@ import { HLSProjectSolution } from '../models/hlsProjectSolution';
 import ProjectManager from '../projectManager';
 
 const startIconPath = new vscode.ThemeIcon('debug-start', new vscode.ThemeColor('debugIcon.startForeground'));
-const debugIconPath = new vscode.ThemeIcon('debug', new vscode.ThemeColor('debugIcon.startForeground'));
 const stopIconPath = new vscode.ThemeIcon('debug-stop', new vscode.ThemeColor('debugIcon.stopForeground'));
 const loadingIconPath = new vscode.ThemeIcon('loading~spin');
 
@@ -153,7 +152,6 @@ class CsimTreeItem extends TreeItem {
     public getChildren(): Thenable<TreeItem[]> {
         return Promise.resolve([
             new RunCsimTreeItem(this._project, this._solution),
-            new DebugCsimTreeItem(this._project, this._solution)
         ]);
     }
 }
@@ -168,7 +166,8 @@ class RunCsimTreeItem extends TreeItem {
         this._project = project;
         this._solution = solution;
 
-        if (vscode.tasks.taskExecutions.some(e => e.task.name === this._solution.csimTaskName(project))) {
+        if (vscode.tasks.taskExecutions.some(e => e.task.name === this._solution.buildCsimTaskName(project)) ||
+            vscode.debug.activeDebugSession?.name === this._solution.debugCsimTaskName(project)) {
             this.iconPath = stopIconPath;
             this.command = {
                 title: `Stop ${title}`,
@@ -182,36 +181,6 @@ class RunCsimTreeItem extends TreeItem {
             this.command = {
                 title: title,
                 command: 'vitis-hls-ide.projects.runCsim',
-                arguments: [this._project, this._solution]
-            };
-        }
-    }
-}
-
-class DebugCsimTreeItem extends TreeItem {
-    private _project: HLSProject;
-    private _solution: HLSProjectSolution;
-    constructor(project: HLSProject, solution: HLSProjectSolution) {
-        const title = 'Debug C Simulation';
-
-        super(title);
-        this._project = project;
-        this._solution = solution;
-
-        if (vscode.debug.activeDebugSession?.name === this._solution.debugCsimTaskName(project)) {
-            this.iconPath = stopIconPath;
-            this.command = {
-                title: `Stop ${title}`,
-                command: 'vitis-hls-ide.projects.stopDebugCsim',
-                arguments: [this._project, this._solution]
-            };
-        } else if (vscode.tasks.taskExecutions.some(e => e.task.source === "Vitis HLS IDE") || vscode.debug.activeDebugSession) {
-            this.iconPath = loadingIconPath;
-        } else {
-            this.iconPath = debugIconPath;
-            this.command = {
-                title: title,
-                command: 'vitis-hls-ide.projects.debugCsim',
                 arguments: [this._project, this._solution]
             };
         }

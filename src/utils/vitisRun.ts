@@ -2,9 +2,10 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import * as vscode from 'vscode';
+import { taskSource } from '../constants';
 
 // Returns undefined if the task was terminated by the user.
-export async function vitisRun(startPath: vscode.Uri, tcl: string, taskName: string, presentationOptions?: vscode.TaskPresentationOptions): Promise<number | undefined> {
+export async function vitisRun(startPath: vscode.Uri, tcl: string, taskName: string, presentationOptions?: vscode.TaskPresentationOptions, problemMatchers?: string[]): Promise<number | undefined> {
     const vitisPath = vscode.workspace.getConfiguration('vitis-hls-ide')?.get<string>('vitisPath');
 
     if (!vitisPath) {
@@ -18,25 +19,35 @@ export async function vitisRun(startPath: vscode.Uri, tcl: string, taskName: str
     fs.writeFileSync(tclFilePath, tcl);
 
     const shellExecution = new vscode.ShellExecution(
+
         `vitis-run --mode hls --tcl ${tclFilePath}`,
+
         {
+
             cwd: startPath.fsPath,
+
             env: {
+
                 PATH: process.env.PATH + path.delimiter + path.join(vitisPath, "bin"),
+
             }
+
         },
+
     );
 
     const task = new vscode.Task(
         { type: 'shell' },
         vscode.TaskScope.Workspace,
         taskName,
-        'Vitis HLS IDE',
+        taskSource,
         shellExecution,
-        [],
+        problemMatchers,
     );
 
-    if (presentationOptions !== undefined) { task.presentationOptions = presentationOptions; }
+    if (presentationOptions !== undefined) {
+        task.presentationOptions = presentationOptions;
+    }
 
     vscode.tasks.executeTask(task);
 
@@ -44,7 +55,14 @@ export async function vitisRun(startPath: vscode.Uri, tcl: string, taskName: str
         const disposable = vscode.tasks.onDidEndTaskProcess(e => {
             if (e.execution.task === task) {
                 disposable.dispose();
-                fs.unlinkSync(tclFilePath);
+
+                // Fire and forget, idgaf what happens to this temp file.
+                fs.unlink(tclFilePath, err => {
+                    if (err) {
+                        console.error(`Error deleting file ${tclFilePath}:`, err);
+                    }
+                });
+
                 resolve(e.exitCode);
             }
         });
