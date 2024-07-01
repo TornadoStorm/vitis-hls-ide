@@ -46,3 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - "Run C Simulation" now builds csim binaries & runs a debug session, showing build errors in the Problems output
+
+## [0.2.3] -- 2024-07-01
+
+### Fixed
+
+- Wrong path resolution for csim debug configuration

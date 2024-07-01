@@ -41,14 +41,16 @@ export default async (project: HLSProject, solution: HLSProjectSolution) => {
         return;
     }
 
+    const buildFolder = vscode.Uri.joinPath(project.uri, solution.name, "csim/build");
+
     const debugConfig: vscode.DebugConfiguration = {
         "name": solution.debugCsimTaskName(project),
         "type": "cppdbg",
         "request": "launch",
-        "program": vscode.Uri.joinPath(project.uri, solution.name, "csim/build/csim.exe"),
+        "program": vscode.Uri.joinPath(buildFolder, "csim.exe").fsPath,
         "args": [],
         "stopAtEntry": false,
-        "cwd": "${workspaceFolder}",
+        "cwd": buildFolder.fsPath,
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
@@ -61,24 +63,6 @@ export default async (project: HLSProject, solution: HLSProjectSolution) => {
             }
         ],
     };
-
-    // const resultsFile = vscode.Uri.joinPath(project.uri, solution.name, `${solution.name}.log`);
-    // await vscode.workspace.fs.readFile(resultsFile).then(content => {
-    //     OutputConsole.instance.appendLine(content.toString());
-    // });
-
-    // switch (exitCode) {
-    //     case 0:
-    //         OutputConsole.instance.appendLine('C simulation completed successfully');
-    //         break;
-    //     case undefined:
-    //         OutputConsole.instance.appendLine('C simulation was cancelled');
-    //         break;
-    //     default:
-    //         OutputConsole.instance.appendLine('C simulation failed with exit code ' + exitCode);
-    //         break;
-    // }
-    // OutputConsole.instance.show();
 
     const started = await vscode.debug.startDebugging(undefined, debugConfig);
     if (!started) {
