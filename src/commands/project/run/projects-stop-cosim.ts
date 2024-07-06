@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { HLSProject } from '../../../models/hlsProject';
-import { HLSProjectSolution } from '../../../models/hlsProjectSolution';
-import { OutputConsole } from '../../../outputConsole';
+import { HLSProject } from '../../../models/hls-project';
+import { HLSProjectSolution } from '../../../models/hls-project-solution';
+import { OutputConsole } from '../../../output-console';
 
 export default async (project: HLSProject, solution: HLSProjectSolution) => {
     const task = vscode.tasks.taskExecutions.find(e => e.task.name === solution.cosimTaskName(project));

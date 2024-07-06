@@ -1,8 +1,8 @@
 import lodash from 'lodash';
 import path from 'path';
 import * as vscode from 'vscode';
-import { HLSProject } from '../../../models/hlsProject';
-import { vitisRun } from '../../../utils/vitisRun';
+import { HLSProject } from '../../../models/hls-project';
+import { vitisRun } from '../../../utils/vitis-run';
 
 export default async (project: HLSProject, testBench: boolean) => {
     const nameType = testBench ? 'test bench' : 'source';

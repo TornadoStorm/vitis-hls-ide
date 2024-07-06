@@ -1,15 +1,15 @@
 import path from 'path';
 import * as vscode from 'vscode';
-import addFiles from './commands/project/modify/addFiles';
-import removeFile from './commands/project/modify/removeFile';
-import runCosim from './commands/project/run/projects.runCosim';
-import runCsim from './commands/project/run/projects.runCsim';
-import runCsynth from './commands/project/run/projects.runCsynth';
-import stopCosim from './commands/project/run/projects.stopCosim';
-import stopCsim from './commands/project/run/projects.stopCsim';
-import stopCsynth from './commands/project/run/projects.stopCsynth';
-import { OutputConsole } from './outputConsole';
-import ProjectManager from './projectManager';
+import addFiles from './commands/project/modify/add-files';
+import removeFile from './commands/project/modify/remove-file';
+import runCosim from './commands/project/run/projects-run-cosim';
+import runCsim from './commands/project/run/projects-run-csim';
+import runCsynth from './commands/project/run/projects-run-csynth';
+import stopCosim from './commands/project/run/projects-stop-cosim';
+import stopCsim from './commands/project/run/projects-stop-csim';
+import stopCsynth from './commands/project/run/projects-stop-csynth';
+import { OutputConsole } from './output-console';
+import ProjectManager from './project-manager';
 import ProjectsViewTreeProvider, { ProjectFileItem, ProjectSourceItem, ProjectTestBenchItem } from './views/projects-tree';
 
 // TODO Make Vitis Unified IDE optional

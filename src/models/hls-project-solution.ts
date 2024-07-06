@@ -1,5 +1,5 @@
 import path from 'path';
-import { HLSProject } from './hlsProject';
+import { HLSProject } from './hls-project';
 
 enum HLSProjectSolutionStatus {
     active,

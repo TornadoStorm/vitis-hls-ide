@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { HLSProject } from '../../../models/hlsProject';
-import { HLSProjectSolution } from '../../../models/hlsProjectSolution';
+import { HLSProject } from '../../../models/hls-project';
+import { HLSProjectSolution } from '../../../models/hls-project-solution';
 
 export default async (project: HLSProject, solution: HLSProjectSolution) => {
     // Stop debugging if debugging

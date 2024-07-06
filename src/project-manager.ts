@@ -1,7 +1,7 @@
 import { EventEmitter } from 'stream';
 import * as vscode from 'vscode';
-import { HLSProject } from './models/hlsProject';
-import { OutputConsole } from './outputConsole';
+import { HLSProject } from './models/hls-project';
+import { OutputConsole } from './output-console';
 
 type ProjectManagerEvents = { 'projectsChanged': [] };
 

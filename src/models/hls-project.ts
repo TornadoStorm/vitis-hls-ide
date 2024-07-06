@@ -1,8 +1,8 @@
 import path from 'path';
 import vscode from 'vscode';
 import xml2js from 'xml2js';
-import { HLSProjectFile } from './hlsProjectFile';
-import { HLSProjectSolution } from './hlsProjectSolution';
+import { HLSProjectFile } from './hls-project-file';
+import { HLSProjectSolution } from './hls-project-solution';
 
 export class HLSProject {
     public name: string;

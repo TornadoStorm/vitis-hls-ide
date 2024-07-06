@@ -1,9 +1,9 @@
 import path from 'path';
 import * as vscode from 'vscode';
-import { HLSProject } from '../models/hlsProject';
-import { HLSProjectFile } from '../models/hlsProjectFile';
-import { HLSProjectSolution } from '../models/hlsProjectSolution';
-import ProjectManager from '../projectManager';
+import { HLSProject } from '../models/hls-project';
+import { HLSProjectFile } from '../models/hls-project-file';
+import { HLSProjectSolution } from '../models/hls-project-solution';
+import ProjectManager from '../project-manager';
 
 const startIconPath = new vscode.ThemeIcon('debug-start', new vscode.ThemeColor('debugIcon.startForeground'));
 const stopIconPath = new vscode.ThemeIcon('debug-stop', new vscode.ThemeColor('debugIcon.stopForeground'));

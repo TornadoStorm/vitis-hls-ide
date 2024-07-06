@@ -1,9 +1,9 @@
 import path from 'path';
 import * as vscode from 'vscode';
 import { taskSource } from '../../../constants';
-import { HLSProject } from '../../../models/hlsProject';
-import { HLSProjectSolution } from '../../../models/hlsProjectSolution';
-import { vitisRun } from '../../../utils/vitisRun';
+import { HLSProject } from '../../../models/hls-project';
+import { HLSProjectSolution } from '../../../models/hls-project-solution';
+import { vitisRun } from '../../../utils/vitis-run';
 
 export default async (project: HLSProject, solution: HLSProjectSolution) => {
     if (vscode.tasks.taskExecutions.some(value => value.task.source === taskSource)) {

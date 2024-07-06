@@ -2,7 +2,7 @@ import lodash from 'lodash';
 import path from 'path';
 import * as vscode from 'vscode';
 import xml2js from 'xml2js';
-import { HLSProject } from '../../../models/hlsProject';
+import { HLSProject } from '../../../models/hls-project';
 
 export default async (project: HLSProject, uri: vscode.Uri, testBench: boolean) => {
     const nameType = testBench ? 'test bench' : 'source';
