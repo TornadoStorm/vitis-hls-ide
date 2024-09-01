@@ -1,8 +1,10 @@
 # Vitis HLS IDE Extension for Visual Studio Code
 
-A [VS Code](https://code.visualstudio.com/) extension to provide a means of managing and developing Vitis HLS projects from the comfort of your VS Code IDE.
+> [!NOTE]
+> This plugin is no longer in active development. If you would like to contribute, feel free to submit any pull requests on this repository and I may check it when I have time.
+> As this plugin is in early development, it may modify your files in unintended ways, and may contain bugs. Please ensure you have backed up your data before using this extension. Here be dragons!
 
-NOTE: This extension is still in its early stages of development, and it may modify your files in unintended ways. Please ensure you have backed up your data before using this extension. Here be dragons!
+A [VS Code](https://code.visualstudio.com/) extension to provide a means of managing and developing Vitis HLS projects from the comfort of your VS Code IDE.
 
 ## Features
 
