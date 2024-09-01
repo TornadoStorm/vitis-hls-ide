@@ -3,6 +3,7 @@
   "displayName": "Vitis HLS IDE (Unstable)",
   "description": "Work on your Vitis HLS project from within VS Code",
   "version": "0.2.3",
+  "deprecated": "This plugin is no longer in active development. If you would like to contribute, feel free to submit any pull requests on this repository and I may check it when I have time.",
   "icon": "resources/logo.png",
   "engines": {
     "vscode": "^1.90.0"
@@ -200,6 +201,7 @@
     "@types/lodash": "^4.17.6",
     "@types/xml2js": "^0.4.14",
     "lodash": "^4.17.21",
+    "vitis-hls-ide": "file:",
     "xml2js": "^0.6.2"
   }
 }
